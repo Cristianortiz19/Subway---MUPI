@@ -1,7 +1,7 @@
 # Subway---MUPI
-Applications Ecosystem Proyect.
+## Applications Ecosystem Proyect.
 
-Members:
+### Members:
 
 Valeria Martinez - A00372453
 

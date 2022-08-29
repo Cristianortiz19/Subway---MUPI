@@ -1,22 +1,62 @@
 class Ingredient {
-    constructor(){
-        this.x = 100;
-        this.y = 100;
-        //this.type = math.random()
+    constructor(xPos, yPos){
+        this.x = xPos;
+        this.y = yPos;
+        this.type = Math.floor(random(0, 4));
+        this.ingredientRandom();
     }
 
     show() {
-        //rectMode(CENTER);
-        //rect(windowWidth/2, 150, 250,50);
+        rectMode(CENTER);
+        fill(255);
+        rect(this.x, this.y, 250,50);
+        fill(0);
+        textAlign(CENTER, CENTER),
+        textSize(20);
+        text(this.ingredientType, this.x, this.y);
+    }
+
+    ingredientRandom() {
+        switch (this.type) {
+            case 0:
+                this.ingredientType = 'Peperoni';
+                break;
+            case 1:
+                this.ingredientType = 'Pollo';
+                break;
+            case 2:
+                this.ingredientType = 'Cebolla';
+                break;
+            case 3:
+                this.ingredientType = 'Lechuga';
+                break;
+            case 4:
+                this.ingredientType = 'Tomate';
+                break;
+            default:
+                break;
+        }
     }
 }
+
+//Cowndown
+timer = function() {
+    setInterval(function() {
+        count --;
+    }, 1000);
+}
+
 const NGROK = `https://${window.location.hostname}`;
 console.log('Server IP: ', NGROK);
 let socket = io(NGROK, { path: '/real-time' });
 
 let controllerX, controllerY = 0;
 
-let ingredients;
+let ingredients = [];
+
+let mobileScreen = 2;
+
+let count = 20;
 
 function setup() {
     frameRate(60);
@@ -32,34 +72,54 @@ function setup() {
 
     socket.emit('device-size', {windowWidth, windowHeight});
 
-    ingredients = new Ingredient();
+    for (let i = 0; i < 5; i++) {
+        ingredients.push(new Ingredient(windowWidth/2, (80 * i) + 210))
+    }
 
     /*let btn = createButton("Permitir movimiento");
     btn.mousePressed(function(){
     DeviceOrientationEvent.requestPermission();
   });*/
-
+  timer();
 }
 
 function draw() {
-    background(0, 5);
+    background(0, 102,42);
     newCursor(pmouseX, pmouseY);
     fill(255);
-    ellipse(controllerX, controllerY, 50, 50);
     //Bread :D
-    rectMode(CENTER);
-    rect(windowWidth/2, 150, 250,50);
-    rect(windowWidth/2, 400, 250,50);
-    ingredients.show();
+
+    ingredients.forEach(element => {
+        element.show();
+    });
+
+    switch (mobileScreen) {
+        case 1:
+            textSize(60);
+            textAlign(CENTER);
+            text("00 : " + count, windowWidth/2, windowHeight/2);
+
+            if(count == 0){
+                mobileScreen = 2;
+                count = 10;
+            }
+            break;
+        case 2:
+            fill(253, 221, 202);
+            rect(windowWidth/2, 120, 250,50);
+            rect(windowWidth/2, 620, 250,50);
+            textSize(60);
+            textAlign(CENTER);
+            text("00 : " + count, windowWidth/2, 80);
+        default:
+            break;
+    }
 }
 
 function touchMoved() {
-    switch (interactions) {
-        case 0:
-            socket.emit('mobile-instructions', { interactions, pmouseX, pmouseY });
-            background(255, 0, 0);
-            break;
-    }
+    
+    socket.emit('mobile-instructions', { pmouseX, pmouseY });
+    background(255, 0, 0);
 }
 
 function windowResized() {

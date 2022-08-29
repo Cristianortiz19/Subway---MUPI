@@ -5,7 +5,8 @@ console.log('Server IP: ', NGROK);
 let controllerX, controllerY = 0;
 let deviceWidth, deviceHeight = 0;
 let mupiWidth, mupiHeight = 0;
-let ballSize = 20;
+let mupiScreen = 0;
+
 
 function setup() {
     frameRate(60);
@@ -22,10 +23,27 @@ function setup() {
 }
 
 function draw() {
-    background(0, 5);
     newCursor(pmouseX, pmouseY);
     fill(255);
-    ellipse(controllerX, controllerY, ballSize, ballSize);
+
+    switch (mupiScreen) {
+        case 0:
+            background(0, 102,42);
+            textAlign(CENTER);
+            textSize(30);
+            text('Juega y gana', windowWidth/2, 150);
+            rectMode(CENTER);
+            rect(windowWidth/2, 300, 250, 250);
+            textSize(15);
+            text('Escanea el código', windowWidth/2, 450);
+
+            break;
+        case 1:
+            rect(windowWidth/2, 120, 250,50);
+            rect(windowWidth/2, 620, 250,50);
+        default:
+            break;
+    }
 
 }
 

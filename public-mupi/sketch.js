@@ -6,6 +6,7 @@ let controllerX, controllerY = 0;
 let deviceWidth, deviceHeight = 0;
 let mupiWidth, mupiHeight = 0;
 let mupiScreen = 0;
+let mupiIngredients = null;
 
 
 function setup() {
@@ -39,12 +40,25 @@ function draw() {
 
             break;
         case 1:
+            background(0, 102,42);
             rect(windowWidth/2, 120, 250,50);
             rect(windowWidth/2, 620, 250,50);
+            mupiIngredients.forEach((element) => {
+                rectMode(CENTER);
+                fill(255);
+                rect(windowWidth/2, element.y, 250,50);
+                fill(0);
+                textAlign(CENTER, CENTER),
+                textSize(20);
+                text(element.ingredientType, windowWidth/2, element.y);
+            });
+            break;
+        case 2:
+            background(0, 102,42);
+            break;
         default:
             break;
     }
-
 }
 
 function windowResized() {
@@ -75,3 +89,9 @@ socket.on('mupi-size', deviceSize => {
     deviceHeight = windowHeight;
     console.log(`User is using a smartphone size of ${deviceWidth} and ${deviceHeight}`);
 });
+
+socket.on('mupi-data', data => {
+    let { ingredients, mobileScreen } = data;
+    mupiScreen = mobileScreen;
+    mupiIngredients = ingredients;
+})

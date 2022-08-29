@@ -30,6 +30,10 @@ io.on('connection', socket => {
         console.log(instructions);
         socket.broadcast.emit('mupi-instructions', instructions);
     })
+
+    socket.on('mobile-data', data => {
+        socket.broadcast.emit('mupi-data', data);
+    })
 });
 
 

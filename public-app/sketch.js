@@ -6,16 +6,6 @@ class Ingredient {
         this.ingredientRandom();
     }
 
-    show() {
-        rectMode(CENTER);
-        fill(255);
-        rect(this.x, this.y, 250,50);
-        fill(0);
-        textAlign(CENTER, CENTER),
-        textSize(20);
-        text(this.ingredientType, this.x, this.y);
-    }
-
     ingredientRandom() {
         switch (this.type) {
             case 0:
@@ -54,7 +44,7 @@ let controllerX, controllerY = 0;
 
 let ingredients = [];
 
-let mobileScreen = 1;
+let mobileScreen = 2;
 
 let count = 20;
 
@@ -73,13 +63,13 @@ function setup() {
     socket.emit('device-size', {windowWidth, windowHeight});
 
     for (let i = 0; i < 5; i++) {
-        ingredients.push(new Ingredient(windowWidth/2, (80 * i) + 210))
+        ingredients.push(new Ingredient(windowWidth/2, (45 * i) + 170))
     }
 
-    /*let btn = createButton("Permitir movimiento");
+    let btn = createButton("Permitir movimiento");
     btn.mousePressed(function(){
     DeviceOrientationEvent.requestPermission();
-  });*/
+  });
   timer();
 }
 
@@ -102,24 +92,55 @@ function draw() {
             break;
         case 2:
             fill(253, 221, 202);
+            rectMode(CENTER);
             rect(windowWidth/2, 120, 250,50);
-            rect(windowWidth/2, 620, 250,50);
+            rect(windowWidth/2, 400, 250,50);
             textSize(60);
             textAlign(CENTER);
             fill(255);
             text("00 : " + count, windowWidth/2, 60);
-            ingredients.forEach(element => {
-                element.show();
-            });
+
+            let xPos = 70;
+            let yPos = 500;
+            for (let i = 0; i < ingredients.length; i++) {
+                const element = ingredients[i];
+
+                if(xPos > 400){
+                    yPos += 50;
+                    xPos = 70;
+                }
+                rectMode(CENTER);
+                fill(255);
+                rect(xPos, yPos, 110,40);
+                fill(0);
+                textAlign(CENTER, CENTER),
+                textSize(20);
+                text(element.ingredientType, xPos, yPos);
+                xPos += 120;
+            }
         default:
             break;
     }
+    socket.emit('mobile-data', { ingredients, mobileScreen });
 }
 
 function touchMoved() {
-    
-    socket.emit('mobile-instructions', { pmouseX, pmouseY, ingredients, mobileScreen});
-    background(255, 0, 0);
+    let xPos = 70;
+    let yPos = 500;
+    for (let i = 0; i < ingredients.length; i++) {
+        const element = ingredients[i];
+        if(xPos > 400){
+            yPos += 50;
+            xPos = 70;
+        }
+        if (pmouseX > xPos -55 && pmouseX < xPos + 55 &&
+            pmouseY > yPos && pmouseY < yPos+70) {
+            element.x = pmouseX;
+            element.y = pmouseY;
+        }
+        xPos += 120;
+    }
+    //socket.emit('mobile-instructions', { pmouseX, pmouseY});
 }
 
 function windowResized() {

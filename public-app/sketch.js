@@ -54,7 +54,7 @@ let controllerX, controllerY = 0;
 
 let ingredients = [];
 
-let mobileScreen = 2;
+let mobileScreen = 1;
 
 let count = 20;
 
@@ -89,10 +89,6 @@ function draw() {
     fill(255);
     //Bread :D
 
-    ingredients.forEach(element => {
-        element.show();
-    });
-
     switch (mobileScreen) {
         case 1:
             textSize(60);
@@ -110,7 +106,11 @@ function draw() {
             rect(windowWidth/2, 620, 250,50);
             textSize(60);
             textAlign(CENTER);
-            text("00 : " + count, windowWidth/2, 80);
+            fill(255);
+            text("00 : " + count, windowWidth/2, 60);
+            ingredients.forEach(element => {
+                element.show();
+            });
         default:
             break;
     }
@@ -118,7 +118,7 @@ function draw() {
 
 function touchMoved() {
     
-    socket.emit('mobile-instructions', { pmouseX, pmouseY });
+    socket.emit('mobile-instructions', { pmouseX, pmouseY, ingredients, mobileScreen});
     background(255, 0, 0);
 }
 

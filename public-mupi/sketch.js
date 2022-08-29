@@ -65,7 +65,8 @@ socket.on('mupi-instructions', instructions => {
     controllerY = (pmouseY * mupiHeight) / deviceHeight;
     console.log({ controllerX, controllerY });
 
-
+    let { mobileScreen } = instructions;
+    mupiScreen = mobileScreen;
 });
 
 socket.on('mupi-size', deviceSize => {

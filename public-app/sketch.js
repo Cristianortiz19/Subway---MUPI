@@ -1,10 +1,22 @@
+class Ingredient {
+    constructor(){
+        this.x = 100;
+        this.y = 100;
+        //this.type = math.random()
+    }
+
+    show() {
+        //rectMode(CENTER);
+        //rect(windowWidth/2, 150, 250,50);
+    }
+}
 const NGROK = `https://${window.location.hostname}`;
 console.log('Server IP: ', NGROK);
 let socket = io(NGROK, { path: '/real-time' });
 
 let controllerX, controllerY = 0;
-let interactions = 0;
-let isTouched = false;
+
+let ingredients;
 
 function setup() {
     frameRate(60);
@@ -20,10 +32,12 @@ function setup() {
 
     socket.emit('device-size', {windowWidth, windowHeight});
 
-    let btn = createButton("Permitir movimiento");
-	btn.mousePressed(function(){
-		DeviceOrientationEvent.requestPermission();
-	});
+    ingredients = new Ingredient();
+
+    /*let btn = createButton("Permitir movimiento");
+    btn.mousePressed(function(){
+    DeviceOrientationEvent.requestPermission();
+  });*/
 
 }
 
@@ -32,11 +46,12 @@ function draw() {
     newCursor(pmouseX, pmouseY);
     fill(255);
     ellipse(controllerX, controllerY, 50, 50);
+    //Bread :D
+    rectMode(CENTER);
+    rect(windowWidth/2, 150, 250,50);
+    rect(windowWidth/2, 400, 250,50);
+    ingredients.show();
 }
-
-/*function mouseDragged() {
-    socket.emit('positions', { controlX: pmouseX, controlY: pmouseY });
-}*/
 
 function touchMoved() {
     switch (interactions) {
@@ -45,33 +60,6 @@ function touchMoved() {
             background(255, 0, 0);
             break;
     }
-}
-
-function touchStarted(){
-    isTouched = true;
-}
-
-function touchEnded(){
-    isTouched = false;
-}
-
-function deviceMoved() {
-    switch (interactions) {
-        case 1:
-            socket.emit('mobile-instructions', { interactions, pAccelerationX, pAccelerationY, pAccelerationZ });
-            background(0, 255, 255);
-            break;
-        case 2:
-            socket.emit('mobile-instructions', { interactions, rotationX, rotationY, rotationZ });
-            background(0, 255, 0);
-            break;
-    }
-    
-}
-
-function deviceShaken() {
-    //socket.emit('mobile-instructions', 'Moved!');
-    //background(0, 255, 255);
 }
 
 function windowResized() {

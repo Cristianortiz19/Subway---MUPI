@@ -29,10 +29,6 @@ function draw() {
 
 }
 
-function mouseDragged() {
-    socket.emit('positions', { controlX: pmouseX, controlY: pmouseY });
-}
-
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
@@ -46,24 +42,10 @@ function newCursor(x, y) {
 socket.on('mupi-instructions', instructions => {
     console.log('ID: ' + socket.id);
 
-    let { interactions } = instructions;
-    switch (interactions) {
-        case 0:
-            let { pmouseX, pmouseY } = instructions;
-            controllerX = (pmouseX * mupiWidth) / deviceWidth;
-            controllerY = (pmouseY * mupiHeight) / deviceHeight;
-            console.log({ controllerX, controllerY });
-            break;
-        case 1:
-            let { pAccelerationX, pAccelerationY, pAccelerationZ } = instructions;
-            ballSize = pAccelerationY < 0 ? pAccelerationY * -2 : pAccelerationY * 2;
-            break;
-        case 2:
-            let { rotationX, rotationY, rotationZ } = instructions;
-            controllerY = (rotationX * mupiHeight) / 90;
-            controllerX = (rotationY * mupiWidth) / 90;
-            break;
-    }
+    let { pmouseX, pmouseY } = instructions;
+    controllerX = (pmouseX * mupiWidth) / deviceWidth;
+    controllerY = (pmouseY * mupiHeight) / deviceHeight;
+    console.log({ controllerX, controllerY });
 
 
 });

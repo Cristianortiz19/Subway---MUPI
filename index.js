@@ -1,7 +1,7 @@
 const express = require('express');
 const { Server } = require('socket.io');
-const PORT = 5050; // No cambiar
-const SERVER_IP = '192.168.1.6'; // Cambiar por la IP del computador
+const PORT = 5050;
+const SERVER_IP = '192.168.1.71'; // Cambiar por la IP del computador
 
 //const os = require('os');
 //const IPaddress = os.networkInterfaces().en0[1].address;

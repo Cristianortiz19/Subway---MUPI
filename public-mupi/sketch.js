@@ -8,6 +8,7 @@ let mupiWidth, mupiHeight = 0;
 let mupiScreen = 0;
 let mupiIngredients = null;
 
+let mupiImageFiles = [];
 
 function setup() {
     frameRate(60);
@@ -21,6 +22,7 @@ function setup() {
     mupiWidth = windowWidth;
     mupiHeight = windowHeight;
     background(0);
+    mupiLoadImages();
 }
 
 function draw() {
@@ -30,13 +32,7 @@ function draw() {
     switch (mupiScreen) {
         case 0:
             background(0, 102,42);
-            textAlign(CENTER);
-            textSize(30);
-            text('Juega y gana', windowWidth/2, 150);
-            rectMode(CENTER);
-            rect(windowWidth/2, 300, 250, 250);
-            textSize(15);
-            text('Escanea el código', windowWidth/2, 450);
+            image(mupiImageFiles[0], 0, 0, 480, 720);
 
             break;
         case 1:
@@ -95,3 +91,9 @@ socket.on('mupi-data', data => {
     mupiScreen = mobileScreen;
     mupiIngredients = ingredients;
 })
+
+function mupiLoadImages() {
+    mupiImageFiles = [
+        loadImage('src/MUPI 1.jpg')
+    ]
+}

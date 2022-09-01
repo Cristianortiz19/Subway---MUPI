@@ -4,21 +4,22 @@ class Ingredient {
         this.y = yPos;
         this.type = Math.floor(random(0, 4));
         this.ingredientRandom();
+        this.imageFile = loadImage(`/src/${this.ingredientType}.png`);
     }
 
     ingredientRandom() {
         switch (this.type) {
             case 0:
-                this.ingredientType = 'Peperoni';
-                break;
-            case 1:
-                this.ingredientType = 'Pollo';
-                break;
-            case 2:
                 this.ingredientType = 'Cebolla';
                 break;
-            case 3:
+            case 1:
                 this.ingredientType = 'Lechuga';
+                break;
+            case 2:
+                this.ingredientType = 'Pepinillos';
+                break;
+            case 3:
+                this.ingredientType = 'Queso';
                 break;
             case 4:
                 this.ingredientType = 'Tomate';
@@ -26,6 +27,9 @@ class Ingredient {
             default:
                 break;
         }
+    }
+    show(){
+        image(this.imageFile, this.x, this.y);
     }
 }
 
@@ -44,9 +48,13 @@ let controllerX, controllerY = 0;
 
 let ingredients = [];
 
+let mixIngredients;                                         
+
 let mobileScreen = 2;
 
 let count = 20;
+
+let imageFiles = [];
 
 function setup() {
     frameRate(60);
@@ -60,16 +68,20 @@ function setup() {
     background(0);
     angleMode(DEGREES);
 
+    loadIMG();
+
     socket.emit('device-size', {windowWidth, windowHeight});
 
     for (let i = 0; i < 5; i++) {
         ingredients.push(new Ingredient(windowWidth/2, (45 * i) + 170))
     }
+    //Mezclar ingredientes
+    mixIngredients = ingredients;
 
-    let btn = createButton("Permitir movimiento");
+    /*let btn = createButton("Permitir movimiento");
     btn.mousePressed(function(){
     DeviceOrientationEvent.requestPermission();
-  });
+  });*/
   timer();
 }
 
@@ -92,9 +104,9 @@ function draw() {
             break;
         case 2:
             fill(253, 221, 202);
+            imageMode(CENTER)
+            image(imageFiles[0], windowWidth/2, 120, 250, 250);
             rectMode(CENTER);
-            rect(windowWidth/2, 120, 250,50);
-            rect(windowWidth/2, 400, 250,50);
             textSize(60);
             textAlign(CENTER);
             fill(255);
@@ -102,8 +114,8 @@ function draw() {
 
             let xPos = 70;
             let yPos = 500;
-            for (let i = 0; i < ingredients.length; i++) {
-                const element = ingredients[i];
+            for (let i = 0; i < mixIngredients.length; i++) {
+                const element = mixIngredients[i];
 
                 if(xPos > 400){
                     yPos += 50;
@@ -118,6 +130,7 @@ function draw() {
                 text(element.ingredientType, xPos, yPos);
                 xPos += 120;
             }
+            image(imageFiles[0], windowWidth/2, 420, 250, 250);
         default:
             break;
     }
@@ -125,10 +138,8 @@ function draw() {
 }
 
 function touchMoved() {
-    let xPos = 70;
-    let yPos = 500;
-    for (let i = 0; i < ingredients.length; i++) {
-        const element = ingredients[i];
+    for (let i = 0; i < mixIngredients.length; i++) {
+        const element = mixIngredients[i];
         if(xPos > 400){
             yPos += 50;
             xPos = 70;
@@ -137,6 +148,7 @@ function touchMoved() {
             pmouseY > yPos && pmouseY < yPos+70) {
             element.x = pmouseX;
             element.y = pmouseY;
+            console.log(element);
         }
         xPos += 120;
     }
@@ -151,4 +163,10 @@ function newCursor(x, y) {
     noStroke();
     fill(255);
     ellipse(x, y, 10, 10);
+}
+
+function loadIMG() {
+    imageFiles = [
+        loadImage('src/pan.png'),
+    ]
 }

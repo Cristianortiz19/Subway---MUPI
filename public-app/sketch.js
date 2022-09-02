@@ -4,7 +4,7 @@ class Ingredient {
         this.y = yPos;
         this.type = Math.floor(random(0, 4));
         this.ingredientRandom();
-        this.imageFile = loadImage(`/src/${this.ingredientType}.png`);
+        //this.imageFile = loadImage(`/src/${this.ingredientType}.png`);
     }
 
     ingredientRandom() {
@@ -29,14 +29,16 @@ class Ingredient {
         }
     }
     show(){
-        image(this.imageFile, this.x, this.y);
+        //image(this.imageFile, this.x, this.y);
     }
 }
 
 //Cowndown
 timer = function() {
     setInterval(function() {
-        count --;
+        if(count > 0){
+            count --;
+        }
     }, 1000);
 }
 
@@ -50,7 +52,7 @@ let ingredients = [];
 
 let mixIngredients;                                         
 
-let mobileScreen = 2;
+let mobileScreen = 5;
 
 let count = 20;
 
@@ -86,13 +88,21 @@ function setup() {
 }
 
 function draw() {
-    background(0, 102,42);
     newCursor(pmouseX, pmouseY);
     fill(255);
     //Bread :D
 
     switch (mobileScreen) {
         case 1:
+            image(imageFiles[20], 0, 0, 395, 853);
+            break;
+        
+        case 2:
+            image(imageFiles[21], 0, 0, 395, 853);
+            rect(100, 100, 200, 200);
+            break;
+        case 3:
+            image(imageFiles[22], 0, 0, 395, 853);
             textSize(60);
             textAlign(CENTER);
             text("00 : " + count, windowWidth/2, windowHeight/2);
@@ -102,7 +112,8 @@ function draw() {
                 count = 10;
             }
             break;
-        case 2:
+        case 4:
+            image(imageFiles[23], 0, 0, 395, 853);
             fill(253, 221, 202);
             imageMode(CENTER)
             image(imageFiles[0], windowWidth/2, 120, 250, 250);
@@ -131,6 +142,9 @@ function draw() {
                 xPos += 120;
             }
             image(imageFiles[0], windowWidth/2, 420, 250, 250);
+        case 5:
+            image(imageFiles[24], 0, 0, 395, 853);
+            break;
         default:
             break;
     }
@@ -138,7 +152,7 @@ function draw() {
 }
 
 function touchMoved() {
-    for (let i = 0; i < mixIngredients.length; i++) {
+    /*for (let i = 0; i < mixIngredients.length; i++) {
         const element = mixIngredients[i];
         if(xPos > 400){
             yPos += 50;
@@ -151,7 +165,7 @@ function touchMoved() {
             console.log(element);
         }
         xPos += 120;
-    }
+    }*/
     //socket.emit('mobile-instructions', { pmouseX, pmouseY});
 }
 
@@ -166,7 +180,11 @@ function newCursor(x, y) {
 }
 
 function loadIMG() {
-    imageFiles = [
-        loadImage('src/pan.png'),
-    ]
+    imageFiles[0] = loadImage('src/pan.png');
+    imageFiles[20] = loadImage('src/APP 0.jpg');
+    imageFiles[21] = loadImage('src/APP 1.jpg');
+    imageFiles[22] = loadImage('src/APP 2.jpg');
+    imageFiles[23] = loadImage('src/APP 3.jpg');
+    imageFiles[24] = loadImage('src/APP 4.jpg');
+
 }

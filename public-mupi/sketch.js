@@ -36,7 +36,14 @@ function draw() {
 
             break;
         case 1:
+            image(mupiImageFiles[1], 0, 0, 480, 720);
+            break;
+        case 2:
+            image(mupiImageFiles[2], 0, 0, 480, 720);
+            break;
+        case 3:
             background(0, 102,42);
+            image(mupiImageFiles[3], 0, 0, 480, 720);
             rect(windowWidth/2, 120, 250,50);
             rect(windowWidth/2, 620, 250,50);
             mupiIngredients.forEach((element) => {
@@ -49,7 +56,10 @@ function draw() {
                 text(element.ingredientType, windowWidth/2, element.y);
             });
             break;
-        case 2:
+        case 4:
+            image(mupiImageFiles[4], 0, 0, 480, 720);
+            break;
+        case 6:
             background(0, 102,42);
             break;
         default:
@@ -94,6 +104,9 @@ socket.on('mupi-data', data => {
 
 function mupiLoadImages() {
     mupiImageFiles = [
-        loadImage('src/MUPI 1.jpg')
+        loadImage('src/MUPI 0.jpg'),
+        loadImage('src/MUPI 1.jpg'),
+        loadImage('src/MUPI 2.jpg'),
+        loadImage('src/MUPI 3.jpg'),
     ]
 }

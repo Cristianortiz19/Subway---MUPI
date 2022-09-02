@@ -23,6 +23,8 @@ function setup() {
     mupiHeight = windowHeight;
     background(0);
     mupiLoadImages();
+
+    cargarImgIngredientes(mupiIngredients);
 }
 
 function draw() {
@@ -44,17 +46,12 @@ function draw() {
         case 3:
             background(0, 102,42);
             image(mupiImageFiles[3], 0, 0, 480, 720);
-            rect(windowWidth/2, 120, 250,50);
-            rect(windowWidth/2, 620, 250,50);
-            mupiIngredients.forEach((element) => {
-                rectMode(CENTER);
-                fill(255);
-                rect(windowWidth/2, element.y, 250,50);
-                fill(0);
-                textAlign(CENTER, CENTER),
-                textSize(20);
-                text(element.ingredientType, windowWidth/2, element.y);
+            image(mupiImageFiles[20], windowWidth/2, 120, 250, 250);
+            mupiIngredients.forEach((element, index) => {
+                image(element.imageFile, 20, 20, 100, 100);
+                //console.log(element.imageFile)
             });
+            image(mupiImageFiles[20], windowWidth/2, 420, 250, 250);
             break;
         case 4:
             image(mupiImageFiles[4], 0, 0, 480, 720);
@@ -100,6 +97,9 @@ socket.on('mupi-data', data => {
     let { ingredients, mobileScreen } = data;
     mupiScreen = mobileScreen;
     mupiIngredients = ingredients;
+    array.forEach(element => {
+        ingredientsFiles.push(loadImage('src/'+element.ingredientType+'.png'))
+    });
 })
 
 function mupiLoadImages() {
@@ -108,5 +108,16 @@ function mupiLoadImages() {
         loadImage('src/MUPI 1.jpg'),
         loadImage('src/MUPI 2.jpg'),
         loadImage('src/MUPI 3.jpg'),
+        
     ]
+    mupiImageFiles[20] = loadImage('src/pan.png');
+}
+
+function cargarImgIngredientes(array) {
+    /*if(array.length != null){
+        array.forEach(element => {
+            ingredientsFiles.push(loadImage('src/'+element.ingredientType+'.png'))
+        });
+    }*/
+    
 }

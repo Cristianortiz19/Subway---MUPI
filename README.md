@@ -7,4 +7,4 @@ Valeria Martinez - A00372453
 
 Guillermo Valencia
 
-Cristian Ortiz
+Cristian Ortiz - A00372906

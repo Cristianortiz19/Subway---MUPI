@@ -1,10 +1,9 @@
 class Ingredient {
-    constructor(xPos, yPos){
-        this.x = xPos;
-        this.y = yPos;
+    constructor(){
+        this.x = 0;
+        this.y = 0;
         this.type = Math.floor(random(0, 4));
         this.ingredientRandom();
-        
     }
 
     ingredientRandom() {
@@ -24,12 +23,33 @@ class Ingredient {
             case 4:
                 this.ingredientType = 'Tomate';
                 break;
+            case 5:
+                this.ingredientType = 'Camarones';
+                break;
+            case 6:
+                this.ingredientType = 'Champiñones';
+                break;
+            case 7:
+                this.ingredientType = 'Mostaza';
+                break;
+            case 8:
+                this.ingredientType = 'Pepinillos';
+                break;
+            case 9:
+                this.ingredientType = 'Queso';
+            case 10:
+                this.ingredientType = 'Tocineta';
+                break;
             default:
                 break;
         }
     }
-    show(){
-        //image(this.imageFile, this.x, this.y);
+
+    setX(newX) {
+        this.x = newX;
+    }
+    setY(newY) {
+        this.y = newY;
     }
 }
 
@@ -42,9 +62,8 @@ timer = function() {
     }, 1000);
 }
 
-const NGROK = `https://${window.location.hostname}`;
-console.log('Server IP: ', NGROK);
-let socket = io(NGROK, { path: '/real-time' });
+const URL = `https://${window.location.hostname}`;
+let socket = io(URL, { path: '/real-time' });
 
 let controllerX, controllerY = 0;
 
@@ -54,7 +73,7 @@ let mixIngredients;
 
 let mobileScreen = 1;
 
-let count = 20;
+let count = 0;
 
 let imageFiles = [];
 
@@ -72,31 +91,23 @@ function setup() {
     background(0);
     angleMode(DEGREES);
 
-    loadIMG();
+    //Cargar Imágenes del movil
+    loadMobileImages();
 
-    socket.emit('device-size', {windowWidth, windowHeight});
-
+    //Crear 6 Ingredientes aleatorios
     for (let i = 0; i < 5; i++) {
-        ingredients.push(new Ingredient(windowWidth/2, (45 * i) + 170))
+        ingredients.push(new Ingredient(windowWidth/2, (45 * i) + 170));
     }
-    //Mezclar ingredientes
+
     mixIngredients = ingredients;
 
     /*let btn = createButton("Permitir movimiento");
     btn.mousePressed(function(){
     DeviceOrientationEvent.requestPermission();
-  });*/
-  switch (mobileScreen) {
-    case 3:
-        count = 20;
-        break;
-  
-    default:
-        break;
-  }
-  timer();
+    });*/
 
-  cargarImgIngredientes(mixIngredients);
+    timer();
+    cargarImgIngredientes(mixIngredients);
 
 }
 
@@ -114,6 +125,7 @@ function draw() {
             
             break;
         case 3:
+            imageMode(CORNER);
             image(imageFiles[22], 0, 0, 395, 853);
             textSize(60);
             textAlign(CENTER);
@@ -157,8 +169,10 @@ function draw() {
         default:
             break;
     }
-    socket.emit('mobile-data', { ingredients, mobileScreen });
+    //Enviar pantalla actual al mupi
+    socket.emit('app-screen', { mobileScreen });
 }
+
 
 function touchMoved() {
     /*for (let i = 0; i < mixIngredients.length; i++) {
@@ -178,12 +192,14 @@ function touchMoved() {
     //socket.emit('mobile-instructions', { pmouseX, pmouseY});
     
 }
+
 function mousePressed() {
     switch (mobileScreen) {
         case 1:
             if (pmouseX > 40 && pmouseX < 360 &&
                 pmouseY > 480 && pmouseY < 550){
                     mobileScreen = 2;
+                    sendIngredients();
                 }
             break;
         case 2:
@@ -193,7 +209,7 @@ function mousePressed() {
                         mobileScreen = 3;
                         
                     }
-            }, 1000);
+            }, 10);
             
             break;
     
@@ -206,7 +222,7 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
-function loadIMG() {
+function loadMobileImages() {
     imageFiles[0] = loadImage('src/pan.png');
     imageFiles[20] = loadImage('src/APP 0.jpg');
     imageFiles[21] = loadImage('src/APP 1.jpg');
@@ -219,8 +235,28 @@ function loadIMG() {
     });
 }
 
+//Provisional - Cargar imágenes para el movil
+
+function cargarImgIngredientes(array) {
+    array.forEach(element => {
+        ingredientsFiles.push(loadImage('src/'+element.ingredientType+'.png'))
+    });
+}
+
+async function sendIngredients() {
+    const data = {
+        method: 'POST',
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify(ingredients)
+    }
+    await fetch('ingredients', data);
+    console.log('Ingredientes enviados')
+}
+
 //Recolección de datos
-let username = "";
+/*let username = "";
 let email = "";
 
 const init = function(){
@@ -230,13 +266,7 @@ const init = function(){
 const submit = function(){
     username = document.getElementById('name');
     email = document.getElementById('email');
-}
-
-function cargarImgIngredientes(array) {
-    array.forEach(element => {
-        ingredientsFiles.push(loadImage('src/'+element.ingredientType+'.png'))
-    });
-}
+}*/
 
 
-document.addEventListener('DOMContentLoaded', init);
+//document.addEventListener('DOMContentLoaded', init);

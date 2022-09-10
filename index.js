@@ -1,10 +1,7 @@
 const express = require('express');
 const { Server } = require('socket.io');
 const PORT = 5050;
-const SERVER_IP = '172.30.232.2'; // Cambiar por la IP del computador
-
-//const os = require('os');
-//const IPaddress = os.networkInterfaces().en0[1].address;
+const SERVER_IP = '192.168.1.59';
 
 const app = express();
 app.use(express.json());
@@ -12,30 +9,39 @@ app.use('/app', express.static('public-app'));
 app.use('/mupi', express.static('public-mupi'));
 
 const httpServer = app.listen(PORT, () => {
-    console.log(`http://${SERVER_IP}:${PORT}/app`);
-    console.log(`http://${SERVER_IP}:${PORT}/mupi`);
+    console.table(
+        {
+            'App:' : `http://${SERVER_IP}:${PORT}/app`,
+            'Mupi:' : `http://${SERVER_IP}:${PORT}/mupi`,
+        }
+    )
 });
-// Run on terminal: ngrok http 5050;
 
 const io = new Server(httpServer, { path: '/real-time' });
 
 io.on('connection', socket => {
-    console.log(socket.id);
+    console.log('Conectado', socket.id);
 
-    socket.on('device-size', deviceSize => {
-        socket.broadcast.emit('mupi-size', deviceSize);
-    });
-
-    socket.on('mobile-instructions', instructions => {
-        console.log(instructions);
-        socket.broadcast.emit('mupi-instructions', instructions);
-    })
-
-    socket.on('mobile-data', data => {
-        socket.broadcast.emit('mupi-data', data);
+    socket.on('app-screen', screen => {
+        socket.broadcast.emit('mupi-screen', screen);
     })
 });
 
+//Testear endpoint
+app.get('/subway', (req, res) => {
+    res.send({message: 'Conected!'});
+})
 
+let ingredients;
+
+//Recibir ingredientes
+app.post('/ingredients', (req, res) => {
+    ingredients = req.body
+    res.send({message: 'Server has saved the ingredients'});
+})
+
+app.get('/ingredients', (req, res) => {
+    res.send(ingredients);
+})
 
 

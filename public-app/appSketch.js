@@ -89,7 +89,7 @@ let result = false;
 
 let userAttempt = [];
 
-let mobileScreen = 4;
+let mobileScreen = 1;
 
 let count = 0;
 

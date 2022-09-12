@@ -1,3 +1,4 @@
+const { response } = require('express');
 const express = require('express');
 const { Server } = require('socket.io');
 const PORT = 5050;
@@ -36,9 +37,11 @@ io.on('connection', socket => {
     })
 });
 
-//Testear endpoint
-app.get('/subway', (req, res) => {
-    res.send({message: 'Conected!'});
+let userData;
+app.post('/user-data', (req, res) => {
+    userData = req.body;
+    res.send({Data: `User data is: ${userData}`})
+    console.log(userData);
 })
 
 

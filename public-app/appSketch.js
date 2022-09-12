@@ -89,7 +89,7 @@ let result = false;
 
 let userAttempt = [];
 
-let mobileScreen = 5;
+let mobileScreen = 4;
 
 let count = 0;
 
@@ -145,8 +145,8 @@ function setup() {
 
     submitButton = createButton("Enviar");
     submitButton.mousePressed(function () {
-        DeviceOrientationEvent.requestPermission();
-        console.log('enviado')
+        userData(user);
+        console.log(user);
     });
     submitButton.position(35, 475);
     submitButton.size(315, 75);
@@ -287,7 +287,7 @@ function loadMobileImages() {
     });
 }
 
-async function userData(user) {
+async function userData() {
     const data = {
         method: 'POST',
         headers: {
@@ -295,21 +295,5 @@ async function userData(user) {
         },
         body: JSON.stringify(user)
     }
-    await fetch('user-data', data);
+    await fetch('/user-data', data);
 }
-
-//Recolección de datos
-/*let username = "";
-let email = "";
-
-const init = function(){
-    document.getElementById('button-submit').addEventListener('click', submit);
-}
-
-const submit = function(){
-    username = document.getElementById('name');
-    email = document.getElementById('email');
-}*/
-
-
-//document.addEventListener('DOMContentLoaded', init);

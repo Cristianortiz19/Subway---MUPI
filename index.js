@@ -25,6 +25,15 @@ io.on('connection', socket => {
     socket.on('app-screen', screen => {
         socket.broadcast.emit('mupi-screen', screen);
     })
+
+    socket.on('app-ingredients', ingredientList => {
+        socket.broadcast.emit('mupi-ingredients', ingredientList);
+        console.log('Recibí ingredientes')
+    })
+
+    socket.on('fill-ingredients', fillIngredient => {
+        socket.broadcast.emit('attempt', fillIngredient)
+    })
 });
 
 //Testear endpoint
@@ -32,16 +41,5 @@ app.get('/subway', (req, res) => {
     res.send({message: 'Conected!'});
 })
 
-let ingredients;
-
-//Recibir ingredientes
-app.post('/ingredients', (req, res) => {
-    ingredients = req.body
-    res.send({message: 'Server has saved the ingredients'});
-})
-
-app.get('/ingredients', (req, res) => {
-    res.send(ingredients);
-})
 
 
